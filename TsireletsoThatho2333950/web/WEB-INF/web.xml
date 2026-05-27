@@ -1,0 +1,475 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="5.0" xmlns="https://jakarta.ee/xml/ns/jakartaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee                              https://jakarta.ee/xml/ns/jakartaee/web-app_5_0.xsd">
+    <display-name>ProcureGov Tender Management System</display-name>
+    <description>Ministry of Public Works - Kingdom of Lesotho | Tsireletso Thatho (2333950)</description>
+    <!-- ===================================================== -->
+    <!-- CONTEXT PARAMETERS -->
+    <!-- ===================================================== -->
+    <!-- Upload Directory Configuration -->
+    <context-param>
+        <param-name>upload.base.directory</param-name>
+        <param-value>C:/TsireletsoThatho/uploads</param-value>
+        <description>Base directory for all uploaded files</description>
+    </context-param>
+    <context-param>
+        <param-name>upload.tenders.directory</param-name>
+        <param-value>C:/TsireletsoThatho/uploads/tenders</param-value>
+        <description>Directory for tender notice PDF documents</description>
+    </context-param>
+    <context-param>
+        <param-name>upload.bids.directory</param-name>
+        <param-value>C:/TsireletsoThatho/uploads/bids</param-value>
+        <description>Directory for bid supporting documents</description>
+    </context-param>
+    <!-- Maximum File Sizes (in bytes) -->
+    <context-param>
+        <param-name>max.tender.file.size</param-name>
+        <param-value>5242880</param-value>
+        <description>Maximum tender notice file size: 5MB</description>
+    </context-param>
+    <context-param>
+        <param-name>max.bid.file.size</param-name>
+        <param-value>10485760</param-value>
+        <description>Maximum bid document file size: 10MB</description>
+    </context-param>
+    <!-- Application Settings -->
+    <context-param>
+        <param-name>max.login.attempts</param-name>
+        <param-value>3</param-value>
+        <description>Maximum failed login attempts before account lockout</description>
+    </context-param>
+    <context-param>
+        <param-name>session.timeout.minutes</param-name>
+        <param-value>30</param-value>
+        <description>Session timeout in minutes</description>
+    </context-param>
+    <!-- ===================================================== -->
+    <!-- SESSION CONFIGURATION -->
+    <!-- ===================================================== -->
+    <session-config>
+        <session-timeout>30</session-timeout>
+        <cookie-config>
+            <http-only>true</http-only>
+            <secure>false</secure>
+            <path>/TsireletsoThatho2333950</path>
+        </cookie-config>
+        <tracking-mode>COOKIE</tracking-mode>
+    </session-config>
+    <!-- ===================================================== -->
+    <!-- WELCOME FILE LIST -->
+    <!-- ===================================================== -->
+    <welcome-file-list>
+        <welcome-file>index.jsp</welcome-file>
+    </welcome-file-list>
+    <!-- ===================================================== -->
+    <!-- SERVLET MAPPINGS - AUTHENTICATION -->
+    <!-- ===================================================== -->
+    <!-- Login Servlet -->
+    <servlet>
+        <servlet-name>LoginServlet</servlet-name>
+        <servlet-class>controller.auth.LoginServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>LoginServlet</servlet-name>
+        <url-pattern>/login</url-pattern>
+    </servlet-mapping>
+    <!-- Logout Servlet -->
+    <servlet>
+        <servlet-name>LogoutServlet</servlet-name>
+        <servlet-class>controller.auth.LogoutServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>LogoutServlet</servlet-name>
+        <url-pattern>/logout</url-pattern>
+    </servlet-mapping>
+    <!-- Supplier Registration Servlet -->
+    <servlet>
+        <servlet-name>SupplierRegistrationServlet</servlet-name>
+        <servlet-class>controller.auth.SupplierRegistrationServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>SupplierRegistrationServlet</servlet-name>
+        <url-pattern>/register</url-pattern>
+    </servlet-mapping>
+    <!-- ===================================================== -->
+    <!-- SHARED SERVLETS - Accessible by ALL authenticated users -->
+    <!-- ===================================================== -->
+    <!-- Download Tender Notice - Accessible by Officers, Suppliers, and Evaluators -->
+    <servlet>
+        <servlet-name>DownloadNoticeServlet</servlet-name>
+        <servlet-class>controller.officer.DownloadNoticeServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>DownloadNoticeServlet</servlet-name>
+        <url-pattern>/tender/download</url-pattern>
+    </servlet-mapping>
+    <!-- ===================================================== -->
+    <!-- SERVLET MAPPINGS - PROCUREMENT OFFICER -->
+    <!-- ===================================================== -->
+    <!-- Officer Dashboard -->
+    <servlet>
+        <servlet-name>OfficerDashboardServlet</servlet-name>
+        <servlet-class>controller.officer.OfficerDashboardServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>OfficerDashboardServlet</servlet-name>
+        <url-pattern>/officer/dashboard</url-pattern>
+    </servlet-mapping>
+    <!-- Create Tender -->
+    <servlet>
+        <servlet-name>CreateTenderServlet</servlet-name>
+        <servlet-class>controller.officer.CreateTenderServlet</servlet-class>
+        <multipart-config>
+            <max-file-size>5242880</max-file-size>
+            <max-request-size>10485760</max-request-size>
+            <file-size-threshold>1048576</file-size-threshold>
+        </multipart-config>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>CreateTenderServlet</servlet-name>
+        <url-pattern>/officer/tender/create</url-pattern>
+    </servlet-mapping>
+    <!-- Edit Tender -->
+    <servlet>
+        <servlet-name>EditTenderServlet</servlet-name>
+        <servlet-class>controller.officer.EditTenderServlet</servlet-class>
+        <multipart-config>
+            <max-file-size>5242880</max-file-size>
+            <max-request-size>10485760</max-request-size>
+            <file-size-threshold>1048576</file-size-threshold>
+        </multipart-config>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>EditTenderServlet</servlet-name>
+        <url-pattern>/officer/tender/edit</url-pattern>
+    </servlet-mapping>
+    <!-- View Tender Details -->
+    <servlet>
+        <servlet-name>ViewTenderServlet</servlet-name>
+        <servlet-class>controller.officer.ViewTenderServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ViewTenderServlet</servlet-name>
+        <url-pattern>/officer/tender/view</url-pattern>
+    </servlet-mapping>
+    <!-- List All Tenders -->
+    <servlet>
+        <servlet-name>ListTendersServlet</servlet-name>
+        <servlet-class>controller.officer.ListTendersServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ListTendersServlet</servlet-name>
+        <url-pattern>/officer/tender/list</url-pattern>
+    </servlet-mapping>
+    <!-- Publish Tender (DRAFT → OPEN) -->
+    <servlet>
+        <servlet-name>PublishTenderServlet</servlet-name>
+        <servlet-class>controller.officer.PublishTenderServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>PublishTenderServlet</servlet-name>
+        <url-pattern>/officer/tender/publish</url-pattern>
+    </servlet-mapping>
+    <!-- Start Evaluation (CLOSED → UNDER_EVALUATION) -->
+    <servlet>
+        <servlet-name>StartEvaluationServlet</servlet-name>
+        <servlet-class>controller.officer.StartEvaluationServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>StartEvaluationServlet</servlet-name>
+        <url-pattern>/officer/tender/start-evaluation</url-pattern>
+    </servlet-mapping>
+    <!-- Award Tender (EVALUATED → AWARDED) -->
+    <servlet>
+        <servlet-name>AwardTenderServlet</servlet-name>
+        <servlet-class>controller.officer.AwardTenderServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AwardTenderServlet</servlet-name>
+        <url-pattern>/officer/tender/award</url-pattern>
+    </servlet-mapping>
+    <!-- View Award Notice -->
+    <servlet>
+        <servlet-name>ViewAwardNoticeServlet</servlet-name>
+        <servlet-class>controller.officer.ViewAwardNoticeServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ViewAwardNoticeServlet</servlet-name>
+        <url-pattern>/officer/tender/award-notice</url-pattern>
+    </servlet-mapping>
+    <!-- Officer Evaluation Panel -->
+    <servlet>
+        <servlet-name>OfficerEvaluateBidsServlet</servlet-name>
+        <servlet-class>controller.officer.OfficerEvaluateBidsServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>OfficerEvaluateBidsServlet</servlet-name>
+        <url-pattern>/officer/evaluate</url-pattern>
+    </servlet-mapping>
+    <!-- ===================================================== -->
+    <!-- SERVLET MAPPINGS - SUPPLIER -->
+    <!-- ===================================================== -->
+    <!-- Supplier Dashboard -->
+    <servlet>
+        <servlet-name>SupplierDashboardServlet</servlet-name>
+        <servlet-class>controller.supplier.SupplierDashboardServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>SupplierDashboardServlet</servlet-name>
+        <url-pattern>/supplier/dashboard</url-pattern>
+    </servlet-mapping>
+    <!-- View Open Tenders -->
+    <servlet>
+        <servlet-name>ViewOpenTendersServlet</servlet-name>
+        <servlet-class>controller.supplier.ViewOpenTendersServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ViewOpenTendersServlet</servlet-name>
+        <url-pattern>/supplier/tenders</url-pattern>
+    </servlet-mapping>
+    <!-- View Tender Detail -->
+    <servlet>
+        <servlet-name>ViewTenderDetailServlet</servlet-name>
+        <servlet-class>controller.supplier.ViewTenderDetailServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ViewTenderDetailServlet</servlet-name>
+        <url-pattern>/supplier/tender/detail</url-pattern>
+    </servlet-mapping>
+    <!-- Submit Bid -->
+    <servlet>
+        <servlet-name>SubmitBidServlet</servlet-name>
+        <servlet-class>controller.supplier.SubmitBidServlet</servlet-class>
+        <multipart-config>
+            <max-file-size>10485760</max-file-size>
+            <max-request-size>20971520</max-request-size>
+            <file-size-threshold>1048576</file-size-threshold>
+        </multipart-config>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>SubmitBidServlet</servlet-name>
+        <url-pattern>/supplier/bid/submit</url-pattern>
+    </servlet-mapping>
+    <!-- View My Bids -->
+    <servlet>
+        <servlet-name>ViewMyBidsServlet</servlet-name>
+        <servlet-class>controller.supplier.ViewMyBidsServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ViewMyBidsServlet</servlet-name>
+        <url-pattern>/supplier/bids</url-pattern>
+    </servlet-mapping>
+    <!-- Download Supporting Document -->
+    <servlet>
+        <servlet-name>DownloadSupportingDocServlet</servlet-name>
+        <servlet-class>controller.supplier.DownloadSupportingDocServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>DownloadSupportingDocServlet</servlet-name>
+        <url-pattern>/supplier/bid/download</url-pattern>
+    </servlet-mapping>
+    <!-- View Award Notice (Supplier) -->
+    <servlet>
+        <servlet-name>SupplierViewAwardServlet</servlet-name>
+        <servlet-class>controller.supplier.ViewAwardNoticeServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>SupplierViewAwardServlet</servlet-name>
+        <url-pattern>/supplier/award</url-pattern>
+    </servlet-mapping>
+    <!-- ===================================================== -->
+    <!-- SERVLET MAPPINGS - EVALUATION COMMITTEE -->
+    <!-- ===================================================== -->
+    <!-- Evaluator Dashboard -->
+    <servlet>
+        <servlet-name>EvaluatorDashboardServlet</servlet-name>
+        <servlet-class>controller.evaluator.EvaluatorDashboardServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>EvaluatorDashboardServlet</servlet-name>
+        <url-pattern>/evaluator/dashboard</url-pattern>
+    </servlet-mapping>
+    <!-- View Tenders for Evaluation -->
+    <servlet>
+        <servlet-name>ViewTendersForEvaluationServlet</servlet-name>
+        <servlet-class>controller.evaluator.ViewTendersForEvaluationServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ViewTendersForEvaluationServlet</servlet-name>
+        <url-pattern>/evaluator/tenders</url-pattern>
+    </servlet-mapping>
+    <!-- Evaluate Bids -->
+    <servlet>
+        <servlet-name>EvaluateBidsServlet</servlet-name>
+        <servlet-class>controller.evaluator.EvaluateBidsServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>EvaluateBidsServlet</servlet-name>
+        <url-pattern>/evaluator/evaluate</url-pattern>
+    </servlet-mapping>
+    <!-- View Evaluation Results -->
+    <servlet>
+        <servlet-name>ViewEvaluationResultsServlet</servlet-name>
+        <servlet-class>controller.evaluator.ViewEvaluationResultsServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ViewEvaluationResultsServlet</servlet-name>
+        <url-pattern>/evaluator/results</url-pattern>
+    </servlet-mapping>
+    <!-- ===================================================== -->
+    <!-- FILTER MAPPINGS -->
+    <!-- ===================================================== -->
+    <!-- Authentication Filter - Checks if user is logged in -->
+    <filter>
+        <filter-name>AuthenticationFilter</filter-name>
+        <filter-class>filter.AuthenticationFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>AuthenticationFilter</filter-name>
+        <url-pattern>/officer/*</url-pattern>
+        <url-pattern>/supplier/*</url-pattern>
+        <url-pattern>/evaluator/*</url-pattern>
+        <url-pattern>/tender/*</url-pattern>
+    </filter-mapping>
+    <!-- Officer Role Filter - Restricts to PROCUREMENT_OFFICER only -->
+    <filter>
+        <filter-name>OfficerRoleFilter</filter-name>
+        <filter-class>filter.OfficerRoleFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>OfficerRoleFilter</filter-name>
+        <url-pattern>/officer/*</url-pattern>
+    </filter-mapping>
+    <!-- Supplier Role Filter - Restricts to SUPPLIER only -->
+    <filter>
+        <filter-name>SupplierRoleFilter</filter-name>
+        <filter-class>filter.SupplierRoleFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>SupplierRoleFilter</filter-name>
+        <url-pattern>/supplier/*</url-pattern>
+    </filter-mapping>
+    <!-- Evaluator Role Filter - Restricts to EVALUATION_COMMITTEE only -->
+    <filter>
+        <filter-name>EvaluatorRoleFilter</filter-name>
+        <filter-class>filter.EvaluatorRoleFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>EvaluatorRoleFilter</filter-name>
+        <url-pattern>/evaluator/*</url-pattern>
+    </filter-mapping>
+    <!-- Tender Status Update Filter - Automatically updates tender statuses -->
+    <filter>
+        <filter-name>TenderStatusUpdateFilter</filter-name>
+        <filter-class>filter.TenderStatusUpdateFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>TenderStatusUpdateFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    <!-- No Cache Filter - Prevents browser caching of secure pages -->
+    <filter>
+        <filter-name>NoCacheFilter</filter-name>
+        <filter-class>filter.NoCacheFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>NoCacheFilter</filter-name>
+        <url-pattern>/officer/*</url-pattern>
+        <url-pattern>/supplier/*</url-pattern>
+        <url-pattern>/evaluator/*</url-pattern>
+        <url-pattern>/tender/*</url-pattern>
+        <url-pattern>/css/*</url-pattern>
+    </filter-mapping>
+    <!-- XSS Protection Filter -->
+    <filter>
+        <filter-name>XSSFilter</filter-name>
+        <filter-class>filter.XSSFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>XSSFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    <!-- ===================================================== -->
+    <!-- ERROR PAGE CONFIGURATION -->
+    <!-- ===================================================== -->
+    <error-page>
+        <error-code>404</error-code>
+        <location>/error.jsp</location>
+    </error-page>
+    <error-page>
+        <error-code>500</error-code>
+        <location>/error.jsp</location>
+    </error-page>
+    <error-page>
+        <error-code>403</error-code>
+        <location>/error.jsp</location>
+    </error-page>
+    <error-page>
+        <error-code>400</error-code>
+        <location>/error.jsp</location>
+    </error-page>
+    <!-- File Upload Size Exception Handler - Officer Tender Creation -->
+    <error-page>
+        <exception-type>org.apache.tomcat.util.http.fileupload.impl.SizeLimitExceededException</exception-type>
+        <location>/officer/tender/create?error=file_too_large</location>
+    </error-page>
+    <error-page>
+        <exception-type>org.apache.tomcat.util.http.fileupload.impl.FileSizeLimitExceededException</exception-type>
+        <location>/officer/tender/create?error=file_too_large</location>
+    </error-page>
+    <!-- File Upload Size Exception Handler - Supplier Bid Submission -->
+    <error-page>
+        <exception-type>org.apache.tomcat.util.http.fileupload.impl.SizeLimitExceededException</exception-type>
+        <location>/supplier/bid/submit?error=file_too_large</location>
+    </error-page>
+    <error-page>
+        <exception-type>org.apache.tomcat.util.http.fileupload.impl.FileSizeLimitExceededException</exception-type>
+        <location>/supplier/bid/submit?error=file_too_large</location>
+    </error-page>
+    <!-- Generic Servlet Exception -->
+    <error-page>
+        <exception-type>jakarta.servlet.ServletException</exception-type>
+        <location>/error.jsp</location>
+    </error-page>
+    <error-page>
+        <exception-type>java.lang.Exception</exception-type>
+        <location>/error.jsp</location>
+    </error-page>
+    <!-- ===================================================== -->
+    <!-- JSP CONFIGURATION - SCRIPTLETS DISABLED -->
+    <!-- ===================================================== -->
+    <jsp-config>
+        <jsp-property-group>
+            <url-pattern>*.jsp</url-pattern>
+            <scripting-invalid>true</scripting-invalid>
+            <el-ignored>false</el-ignored>
+            <page-encoding>UTF-8</page-encoding>
+        </jsp-property-group>
+        <!-- JSTL Tag Library Configuration -->
+        
+    </jsp-config>
+    <!-- ===================================================== -->
+    <!-- MIME MAPPINGS -->
+    <!-- ===================================================== -->
+    <mime-mapping>
+        <extension>pdf</extension>
+        <mime-type>application/pdf</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>docx</extension>
+        <mime-type>application/vnd.openxmlformats-officedocument.wordprocessingml.document</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>doc</extension>
+        <mime-type>application/msword</mime-type>
+    </mime-mapping>
+    <!-- ===================================================== -->
+    <!-- RESOURCE REFERENCES -->
+    <!-- ===================================================== -->
+    <resource-ref>
+        <description>MySQL Database Connection Pool</description>
+        <res-ref-name>jdbc/ProcureGovDB</res-ref-name>
+        <res-type>javax.sql.DataSource</res-type>
+        <res-auth>Container</res-auth>
+    </resource-ref>
+</web-app>

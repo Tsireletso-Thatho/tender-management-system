@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    CONTEXT CONFIGURATION FOR PROCOUREGOV
+    Student: Tsireletso Thatho (2333950)
+    Database: TsireletsoThatho2333950
+    Tomcat 10.1.50 - JNDI DataSource Configuration
+    
+    IMPORTANT RULES FOLLOWED:
+    - NO path="" attribute in Context tag (CRITICAL)
+    - Uses maxTotal, maxIdle, maxWaitMillis (Tomcat 10.1 compatible)
+    - Upload directories configured as parameters
+    
+    Upload Directory Structure:
+    C:/TsireletsoThatho/uploads/
+    ├── tenders/    (for tender notice PDFs - max 5MB)
+    └── bids/       (for bid supporting documents - max 10MB)
+-->
+<Context path="/TsireletsoThatho2333950">
+  <!-- ===================================================== -->
+  <!-- JNDI DATASOURCE CONFIGURATION -->
+  <!-- ===================================================== -->
+  <Resource auth="Container" driverClassName="com.mysql.cj.jdbc.Driver" logAbandoned="true" maxIdle="10" maxTotal="20" maxWaitMillis="10000" name="jdbc/ProcureGovDB" password="" removeAbandonedOnBorrow="true" removeAbandonedTimeout="60" testOnBorrow="true" type="javax.sql.DataSource" url="jdbc:mysql://localhost:3306/TsireletsoThatho2333950?useSSL=false&amp;allowPublicKeyRetrieval=true&amp;serverTimezone=Africa/Maseru" username="root" validationQuery="SELECT 1"/>
+  <!-- ===================================================== -->
+  <!-- UPLOAD DIRECTORY CONFIGURATION PARAMETERS -->
+  <!-- ===================================================== -->
+  <!-- Base upload directory -->
+  <Parameter description="Base directory for all uploaded files" name="upload.base.directory" override="false" value="C:/TsireletsoThatho/uploads"/>
+  <!-- Tender notices upload directory -->
+  <Parameter description="Directory for tender notice PDF documents (max 5MB)" name="upload.tenders.directory" override="false" value="C:/TsireletsoThatho/uploads/tenders"/>
+  <!-- Bid supporting documents upload directory -->
+  <Parameter description="Directory for bid supporting documents (max 10MB)" name="upload.bids.directory" override="false" value="C:/TsireletsoThatho/uploads/bids"/>
+  <!-- Maximum file size configuration (in bytes) -->
+  <Parameter description="Maximum tender notice file size: 5MB (5,242,880 bytes)" name="max.tender.file.size" override="false" value="5242880"/>
+  <Parameter description="Maximum bid document file size: 10MB (10,485,760 bytes)" name="max.bid.file.size" override="false" value="10485760"/>
+</Context>
